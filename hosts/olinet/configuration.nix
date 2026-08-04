@@ -12,7 +12,7 @@
   boot.loader.grub.device = "/dev/vda";
   boot.loader.grub.useOSProber = true;
 
-  networking.hostName = "m3-kratos"; # Define your hostname.
+  networking.hostName = "olinet"; # Define your hostname.
   # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -95,15 +95,4 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "26.05"; # Did you read the comment?
 
-  # weekly auto update
-  system.autoUpgrade = {
-    enable = true;
-    flags = [
-      "--print-build-logs"
-    ];
-    dates = "weekly";
-    randomizedDelaySec = "45min";
-    allowReboot = true;  # Set to true if you want automatic reboots
-    runGarbageCollection = true;
-  };
 }

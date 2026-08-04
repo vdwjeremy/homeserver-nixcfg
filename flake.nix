@@ -17,7 +17,6 @@
 
   outputs = {
     self,
-    home-manager,
     nixpkgs,
     ...
   } @ inputs: let
@@ -35,9 +34,9 @@
       forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
     overlays = import ./overlays {inherit inputs;};
     nixosConfigurations = {
-      m3-kratos = nixpkgs.lib.nixosSystem {
+      olinet = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [./hosts/m3-kratos];
+        modules = [./hosts/olinet];
       };
     };
   };
