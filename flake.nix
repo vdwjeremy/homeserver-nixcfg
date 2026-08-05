@@ -13,11 +13,13 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs = {
     self,
     nixpkgs,
+    agenix,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -36,7 +38,10 @@
     nixosConfigurations = {
       olinet = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs outputs;};
-        modules = [./hosts/olinet];
+        modules = [
+          ./hosts/olinet
+          agenix.nixosModules.default
+        ];
       };
     };
   };

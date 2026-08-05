@@ -95,11 +95,14 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "26.05"; # Did you read the comment?
 
+  # nixos-upgrade.service, nixos-upgrade.timer
   system.autoUpgrade.enable = true;
-  system.autoUpgrade.dates  = "*-*-* *:20:00";
+  system.autoUpgrade.dates  = "*-*-* *:23:30";
   system.autoUpgrade.flake  = "github:vdwjeremy/homeserver-nixcfg#olinet";
   system.autoUpgrade.flags  = ["--refresh"];
   system.autoUpgrade.randomizedDelaySec = "5m";
   system.autoUpgrade.allowReboot = true;  # Set to true if you want automatic reboots
   system.autoUpgrade.runGarbageCollection = true;
+
+  age.secrets.secret1.file = ../../secrets/secret1.age;
 }
