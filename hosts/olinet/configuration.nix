@@ -127,18 +127,22 @@
   #  acceptTerms = true;
   #  defaults.email = "noreply@vdw.life";
   #};
-  services.nginx.package = (pkgs.nginx.override { modules = [
-    pkgs.nginxModules.dav
-  ]; });
+  services.nginx = {
+    enable = true;
+    package = (pkgs.nginx.override { modules = [
+      pkgs.nginxModules.dav
+    ]; });
+  };
   systemd.services.nginx.serviceConfig.StateDirectory = "nginx";
 
   # Webdav
   age.secrets.webdav-htpasswd = {
     file = ../../secrets/webdav-htpasswd.age;
-    owner = "nginx";
-    group = "nginx";
+    owner = config.services.nginx.user;
+    group = config.services.nginx.group;
   };
   services.nginx.virtualHosts."dav.vdw.life" = {
+    addSSL = false;
     forceSSL = false;
     enableACME = false;
     http2 = true;

@@ -9,3 +9,5 @@ nix shell github:ryantm/agenix
     agenix -e secret.age
 
 htpasswd -nb user password
+
+cat /run/agenix/secret
