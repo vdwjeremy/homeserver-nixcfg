@@ -47,9 +47,9 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."devops" = {
+  users.users."nixos" = {
     isNormalUser = true;
-    description = "devops";
+    description = "nixos";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
   };
