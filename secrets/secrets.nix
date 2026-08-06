@@ -1,17 +1,12 @@
 #https://github.com/ryantm/agenix#install-via-niv
 
 let
-  user1 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPPb8OLpRQ540CqpbVGn7yUMKnU95MYTYAEv099E23fa";
+  user1 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILUuijNhW7+RinV54uTOgptYixD2FRbZacus63AUEIK4";
   users = [ user1 ];
 
-  system1 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICScrS51RvpecVzMYIS05zY6T57sCZscUd8McRSn1R3/";
+  system1 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEulzKfLIdzyAOTAVOSKor8xMd2nV+kbSrslV1bHNsQ7";
   systems = [ system1 ];
 in
 {
-  "secret1.age".publicKeys = [ user1 system1 ];
-  "secret2.age".publicKeys = users ++ systems;
-  "armored-secret.age" = {
-    publicKeys = [ user1 ];
-    armor = true;
-  };
+  "webdav-htpasswd.age".publicKeys = users ++ systems;
 }

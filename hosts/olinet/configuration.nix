@@ -104,5 +104,64 @@
   system.autoUpgrade.allowReboot = true;  # Set to true if you want automatic reboots
   system.autoUpgrade.runGarbageCollection = true;
 
-  age.secrets.secret1.file = ../../secrets/secret1.age;
+  # PostgreSQL DB
+  services.postgresql = {
+    enable = true;
+    checkConfig = true;
+    ensureDatabases = [ ];
+    authentication = pkgs.lib.mkOverride 10 ''
+      #type database  DBuser  auth-method
+      local all       all     trust
+    '';
+    enableJIT = true;
+    package = pkgs.postgresql_18;
+    extensions = with pkgs.postgresql_18.pkgs; [ pgvector vectorchord ];
+  };
+
+  # Web
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+    28981
+  ];
+  #security.acme = {
+  #  acceptTerms = true;
+  #  defaults.email = "noreply@vdw.life";
+  #};
+  services.nginx.package = (pkgs.nginx.override { modules = [
+    pkgs.nginxModules.dav
+  ]; });
+  systemd.services.nginx.serviceConfig.StateDirectory = "nginx";
+
+  # Webdav
+  age.secrets.webdav-htpasswd = {
+    file = ../../secrets/webdav-htpasswd.age;
+    owner = "nginx";
+    group = "nginx";
+  };
+  services.nginx.virtualHosts."dav.vdw.life" = {
+    forceSSL = false;
+    enableACME = false;
+    http2 = true;
+    http3 = true;
+    root = "/var/lib/nginx";
+    locations."/" = {
+      extraConfig = ''
+        auth_basic "Restricted WebDAV";
+        auth_basic_user_file ${config.age.secrets.webdav-htpasswd.path};
+
+        dav_methods PUT DELETE MKCOL COPY MOVE;
+        dav_ext_methods PROPFIND OPTIONS LOCK UNLOCK;
+        # Adjust as desired:
+        dav_access user:rw group:rw all:r;
+        client_max_body_size 0;
+        create_full_put_path on;
+        #client_body_temp_path /srv/client-temp;
+        autoindex on;
+
+        allow all;
+        '';
+    };
+  };
+
 }
