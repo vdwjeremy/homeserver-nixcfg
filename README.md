@@ -1,5 +1,6 @@
 ## Useful commands
 
+nix flake check
 nix flake update
 
 nixos-rebuild switch --flake /etc/nixos#olinet
