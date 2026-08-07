@@ -9,4 +9,5 @@ let
 in
 {
   "webdav-htpasswd.age".publicKeys = users ++ systems;
+  "acme.age".publicKeys = users ++ systems;
 }

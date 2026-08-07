@@ -51,6 +51,14 @@
     description = "nixos";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII8TR1gvyHwr7C3/lgCywRw6M/Yx9L6sOW3+NetXjJl4"
+    ];
+  };
+  users.users."root" = {
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII8TR1gvyHwr7C3/lgCywRw6M/Yx9L6sOW3+NetXjJl4"
+    ];
   };
 
   # Allow unfree packages
@@ -121,12 +129,18 @@
   networking.firewall.allowedTCPPorts = [
     80
     443
-    28981
   ];
-  #security.acme = {
-  #  acceptTerms = true;
-  #  defaults.email = "noreply@vdw.life";
-  #};
+  age.secrets.acme = {
+    file = ../../secrets/acme.age;
+  };
+  security.acme = {
+    acceptTerms = true;
+    defaults = {
+      dnsProvider = "cloudflare";
+      dnsResolver = "1.1.1.1:53"; # Use cloudflare's dns 
+      environmentFile = "${config.age.secrets.acme.path}";
+    };
+  };
   services.nginx = {
     enable = true;
     package = (pkgs.nginx.override { modules = [
@@ -142,9 +156,8 @@
     group = config.services.nginx.group;
   };
   services.nginx.virtualHosts."dav.vdw.life" = {
-    addSSL = false;
-    forceSSL = false;
-    enableACME = false;
+    forceSSL = true;
+    enableACME = true;
     http2 = true;
     http3 = true;
     root = "/var/lib/nginx";
