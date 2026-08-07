@@ -138,10 +138,15 @@
   security.acme = {
     acceptTerms = true;
     defaults = {
+      email = "admin@vdw.life";
       dnsProvider = "cloudflare";
       dnsResolver = "1.1.1.1:53"; # Use cloudflare's dns 
       environmentFile = "${config.age.secrets.acme.path}";
     };
+    #certs."vdw.life" = {
+    #  domain = "vdw.life";
+    #  extraDomainNames = [ "*.vdw.life" ];
+    #};
   };
   services.nginx = {
     enable = true;
@@ -158,8 +163,8 @@
     group = config.services.nginx.group;
   };
   services.nginx.virtualHosts."dav.vdw.life" = {
-    forceSSL = true;
     enableACME = true;
+    acmeRoot = null;
     http2 = true;
     http3 = true;
     root = "/var/lib/nginx";
