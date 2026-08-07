@@ -143,10 +143,6 @@
       dnsResolver = "1.1.1.1:53"; # Use cloudflare's dns 
       environmentFile = "${config.age.secrets.acme.path}";
     };
-    #certs."vdw.life" = {
-    #  domain = "vdw.life";
-    #  extraDomainNames = [ "*.vdw.life" ];
-    #};
   };
   services.nginx = {
     enable = true;
@@ -165,6 +161,7 @@
   services.nginx.virtualHosts."dav.vdw.life" = {
     enableACME = true;
     acmeRoot = null;
+    addSSL = true;
     http2 = true;
     http3 = true;
     root = "/var/lib/nginx";
