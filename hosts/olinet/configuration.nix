@@ -139,7 +139,7 @@
     statdPort = 4000;
     extraNfsdConfig = '''';
     exports = ''
-      /mnt/data/music    192.168.0.0/16(insecure,rw,no_subtree_check) 2a02:8428:1c70:a900::/56(insecure,rw,no_subtree_check)
+      /mnt/data/music    192.168.0.0/16(insecure,rw,no_subtree_check,all_squash,anonuid=60,anongid=60) 2a02:8428:1c70:a900::/56(insecure,rw,no_subtree_check,all_squash,anonuid=60,anongid=60)
     '';
   };
 
