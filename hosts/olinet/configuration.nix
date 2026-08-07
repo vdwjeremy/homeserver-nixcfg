@@ -12,11 +12,6 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "olinet"; # Define your hostname.
-  # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -60,9 +55,6 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII8TR1gvyHwr7C3/lgCywRw6M/Yx9L6sOW3+NetXjJl4"
     ];
   };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -130,6 +122,9 @@
     80
     443
   ];
+  networking.firewall.allowedUDPPorts = [
+    443
+  ];
   age.secrets.acme = {
     file = ../../secrets/acme.age;
     owner = "acme";
@@ -141,7 +136,7 @@
       email = "admin@vdw.life";
       dnsProvider = "cloudflare";
       dnsResolver = "1.1.1.1:53"; # Use cloudflare's dns 
-      environmentFile = "${config.age.secrets.acme.path}";
+      environmentFile = "${config.age.secrets.acme.path}"; # ! API Keys deprecated, API Tokens migration to plan
     };
   };
   services.nginx = {
