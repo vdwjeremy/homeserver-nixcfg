@@ -132,6 +132,8 @@
   ];
   age.secrets.acme = {
     file = ../../secrets/acme.age;
+    owner = "acme";
+    group = config.services.nginx.group;
   };
   security.acme = {
     acceptTerms = true;
