@@ -103,6 +103,19 @@
   system.autoUpgrade.allowReboot = true;  # Set to true if you want automatic reboots
   system.autoUpgrade.runGarbageCollection = true;
 
+  # Firewall
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 
+      80 443                          # HTTP/HTTPS
+      111 2049 4000 4001 4002 20048   # NFS
+    ];
+    allowedUDPPorts = [ 
+      443                             # HTTPS
+      111 2049 4000 4001 4002 20048   # NFS
+    ];
+  };
+
   # PostgreSQL DB
   services.postgresql = {
     enable = true;
@@ -117,14 +130,20 @@
     extensions = with pkgs.postgresql_18.pkgs; [ pgvector vectorchord ];
   };
 
+  # NFS
+  services.nfs.server = {
+    enable = true;
+    # fixed rpc.statd port; for firewall
+    lockdPort = 4001;
+    mountdPort = 4002;
+    statdPort = 4000;
+    extraNfsdConfig = '''';
+    exports = ''
+      /mnt/data/music    192.168.0.0/16(insecure,rw,no_subtree_check) 2a02:8428:1c70:a900::/56(insecure,rw,no_subtree_check)
+    '';
+  };
+
   # Web
-  networking.firewall.allowedTCPPorts = [
-    80
-    443
-  ];
-  networking.firewall.allowedUDPPorts = [
-    443
-  ];
   age.secrets.acme = {
     file = ../../secrets/acme.age;
     owner = "acme";
@@ -145,7 +164,6 @@
       pkgs.nginxModules.dav
     ]; });
   };
-  systemd.services.nginx.serviceConfig.StateDirectory = "nginx";
 
   # Webdav
   age.secrets.webdav-htpasswd = {
@@ -159,7 +177,7 @@
     addSSL = true;
     http2 = true;
     http3 = true;
-    root = "/var/lib/nginx";
+    root = "/mnt/data/webdav";
     locations."/" = {
       extraConfig = ''
         auth_basic "Restricted WebDAV";
