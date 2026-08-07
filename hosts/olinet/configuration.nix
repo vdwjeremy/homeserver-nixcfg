@@ -184,4 +184,48 @@
     };
   };
 
+  # Pocket ID
+  age.secrets.pocket-id-key = {
+    file = ../../secrets/pocket-id-key.age;
+    owner = config.services.pocket-id.user;
+    group = config.services.pocket-id.group;
+  };
+  services.pocket-id = {
+    enable = true;
+    credentials = {
+      ENCRYPTION_KEY = config.age.secrets.pocket-id-key.path;
+    };
+    settings = {
+      # <https://pocket-id.org/docs/configuration/environment-variables>
+      APP_URL = "https://auth.vdw.life";
+      TRUST_PROXY = true;
+      HOST = "localhost";
+      PORT = 1411;
+      ALLOW_INSECURE_CALLBACK_URLS = false;
+      #DB_CONNECTION_STRING = "postgresql:///pocketid";
+    };
+  };
+  services.nginx.virtualHosts."auth.vdw.life" = {
+    enableACME = true;
+    acmeRoot = null;
+    addSSL = true;
+    http2 = true;
+    http3 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:1411";
+      proxyWebsockets = true; # needed if you need to use WebSocket
+      extraConfig = ''
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto https;
+        proxy_set_header        X-Forwarded-Host $host;
+        proxy_set_header        X-Forwarded-Server $hostname;
+        proxy_busy_buffers_size   512k;
+        proxy_buffers   4 512k;
+        proxy_buffer_size   256k;
+        '';
+    };
+  };
+
 }

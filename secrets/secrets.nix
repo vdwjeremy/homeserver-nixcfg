@@ -10,4 +10,5 @@ in
 {
   "webdav-htpasswd.age".publicKeys = users ++ systems;
   "acme.age".publicKeys = users ++ systems;
+  "pocket-id-key.age".publicKeys = users ++ systems;
 }
