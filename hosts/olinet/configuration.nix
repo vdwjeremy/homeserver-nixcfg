@@ -225,7 +225,7 @@
     http2 = true;
     http3 = true;
     locations."/" = {
-      proxyPass = "http://[::1]:1411";
+      proxyPass = "http://localhost:1411";
       proxyWebsockets = true; # needed if you need to use WebSocket
       extraConfig = ''
         proxy_set_header        Host $host;
@@ -258,7 +258,7 @@
     http2 = true;
     http3 = true;
     locations."/" = {
-      proxyPass = "http://[::1]:${toString config.services.immich.port}";
+      proxyPass = "http://localhost:2283";
       proxyWebsockets = true;
       recommendedProxySettings = true;
       extraConfig = ''
