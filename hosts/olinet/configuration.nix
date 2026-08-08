@@ -225,7 +225,7 @@
     http2 = true;
     http3 = true;
     locations."/" = {
-      proxyPass = "http://localhost:1411";
+      proxyPass = "http://[::1]:1411";
       proxyWebsockets = true; # needed if you need to use WebSocket
       extraConfig = ''
         proxy_set_header        Host $host;
@@ -238,6 +238,35 @@
         proxy_buffers   4 512k;
         proxy_buffer_size   256k;
         '';
+    };
+  };
+
+  # Immich
+  services.immich = {
+    enable = true;
+    port = 2283;
+    mediaLocation = "/mnt/data/immich";
+    settings = {
+      server.externalDomain = "https://immich.vdw.life";
+      newVersionCheck.enabled = true;
+    };
+  };
+  services.nginx.virtualHosts."immich.vdw.life" = {
+    enableACME = true;
+    acmeRoot = null;
+    addSSL = true;
+    http2 = true;
+    http3 = true;
+    locations."/" = {
+      proxyPass = "http://[::1]:${toString config.services.immich.port}";
+      proxyWebsockets = true;
+      recommendedProxySettings = true;
+      extraConfig = ''
+        client_max_body_size 50000M;
+        proxy_read_timeout   600s;
+        proxy_send_timeout   600s;
+        send_timeout         600s;
+      '';
     };
   };
 
