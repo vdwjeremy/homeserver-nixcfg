@@ -314,4 +314,51 @@
     };
   };
 
+  # Paperless NGX
+  services.paperless = {
+    enable = true;
+    consumptionDirIsPublic = true;
+    database.createLocally = true;
+    dataDir = "/mnt/data/paperless";
+    settings = {
+      PAPERLESS_DBENGINE = "postgresql";
+      PAPERLESS_CONSUMER_IGNORE_PATTERN = [
+        ".DS_STORE/*"
+        "desktop.ini"
+      ];
+      PAPERLESS_CONSUMER_DELETE_DUPLICATES = true;
+      PAPERLESS_CONSUMER_RECURSIVE = true;
+      PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS = true;
+      PAPERLESS_OCR_LANGUAGE = "fra+eng";
+      PAPERLESS_OCR_USER_ARGS = {
+        optimize = 3;
+        continue_on_soft_render_error = true;
+      };
+      PAPERLESS_OCR_MAX_IMAGE_PIXELS=80000000;
+      PAPERLESS_URL = "https://paperless.vdw.life";
+      PAPERLESS_TASK_WORKERS=1;
+      PAPERLESS_THREADS_PER_WORKER=1;
+      PAPERLESS_CONVERT_MEMORY_LIMIT=128;
+      PAPERLESS_CONSUMER_ENABLE_ASN_BARCODE = true;
+    };
+  };
+  services.nginx.virtualHosts."paperless.vdw.life" = {
+    enableACME = true;
+    acmeRoot = null;
+    addSSL = true;
+    http2 = true;
+    http3 = true;
+    locations."/" = {
+      proxyPass = "http://localhost:28981";
+      proxyWebsockets = true;
+      recommendedProxySettings = true;
+      extraConfig = ''
+        client_max_body_size 50000M;
+        proxy_read_timeout   600s;
+        proxy_send_timeout   600s;
+        send_timeout         600s;
+      '';
+    };
+  };
+
 }
