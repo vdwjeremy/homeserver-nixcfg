@@ -280,7 +280,7 @@
       };
       notifications = {
         smtp = {
-          enabled = false;
+          enabled = true;
           from = "immich@vdw.life";
           replyTo = "noreply@vdw.life";
           transport = {
