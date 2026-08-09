@@ -12,4 +12,5 @@ in
   "acme.age".publicKeys = users ++ systems;
   "pocket-id-key.age".publicKeys = users ++ systems;
   "immich-oidc-secret.age".publicKeys = users ++ systems;
+  "immich-smtp-password.age".publicKeys = users ++ systems;
 }

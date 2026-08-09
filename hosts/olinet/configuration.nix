@@ -163,7 +163,6 @@
     package = (pkgs.nginx.override { modules = [
       pkgs.nginxModules.dav
     ]; });
-    #sslProtocols = "TLSv1.1 TLSv1.2"; #to avoid problems with ECH
   };
 
   # Webdav
@@ -248,6 +247,11 @@
     owner = config.services.immich.user;
     group = config.services.immich.group;
   };
+  age.secrets.immich-smtp-password = {
+    file = ../../secrets/immich-smtp-password.age;
+    owner = config.services.immich.user;
+    group = config.services.immich.group;
+  };
   services.immich = {
     enable = true;
     port = 2283;
@@ -273,6 +277,21 @@
         enabled = true;
         hashVerificationEnabled = true;
         template = "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}";
+      };
+      notifications = {
+        smtp = {
+          enabled = false;
+          from = "immich@vdw.life";
+          replyTo = "noreply@vdw.life";
+          transport = {
+            host = "live.smtp.mailtrap.io";
+            ignoreCert = false;
+            port = 587;
+            secure = true;
+            username = "api";
+            password._secret = config.age.secrets.immich-smtp-password.path;
+          };
+        };
       };
     };
   };
