@@ -286,6 +286,13 @@
         send_timeout         600s;
       '';
     };
+    locations."/api/oauth/backchannel-logout" = {
+      proxyPass = "http://localhost:2283/api/oauth/backchannel-logout";
+      recommendedProxySettings = true;
+      extraConfig = ''
+        proxy_method POST;
+      '';
+    };
   };
 
 }
