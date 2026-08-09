@@ -249,6 +249,19 @@
     settings = {
       server.externalDomain = "https://immich.vdw.life";
       newVersionCheck.enabled = true;
+      oauth= {
+        issuerUrl= "https://auth.vdw.life/issue";
+        endSessionEndpoint= "https://auth.vdw.life/logout";
+        autoLaunch= false;
+        autoRegister= true;
+        clientId= "id";
+        clientSecret= "secret";
+        enabled= false;
+        roleClaim= "immich_role";
+        scope= "openid email profile";
+        storageLabelClaim= "preferred_username";
+        storageQuotaClaim= "immich_quota";
+      };
     };
   };
   services.nginx.virtualHosts."immich.vdw.life" = {
