@@ -163,6 +163,7 @@
     package = (pkgs.nginx.override { modules = [
       pkgs.nginxModules.dav
     ]; });
+    #sslProtocols = "TLSv1.1 TLSv1.2"; #to avoid problems with ECH
   };
 
   # Webdav
@@ -254,11 +255,12 @@
     settings = {
       server.externalDomain = "https://immich.vdw.life";
       newVersionCheck.enabled = true;
+      passwordLogin.enabled = false;
       oauth = {
         enabled = true;
         issuerUrl = "https://auth.vdw.life/.well-known/openid-configuration";
         endSessionEndpoint = "https://auth.vdw.life/api/oidc/end-session";
-        autoLaunch = false;
+        autoLaunch = true;
         autoRegister = true;
         clientId = "a8258857-72d7-4efa-9fd2-47c78713bcc6";
         clientSecret._secret = config.age.secrets.immich-oidc-secret.path;
@@ -289,13 +291,6 @@
         proxy_read_timeout   600s;
         proxy_send_timeout   600s;
         send_timeout         600s;
-      '';
-    };
-    locations."/api/oauth/backchannel-logout" = {
-      proxyPass = "http://localhost:2283/api/oauth/backchannel-logout";
-      recommendedProxySettings = true;
-      extraConfig = ''
-        proxy_method POST;
       '';
     };
   };
