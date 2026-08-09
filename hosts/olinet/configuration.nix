@@ -287,7 +287,7 @@
             host = "live.smtp.mailtrap.io";
             ignoreCert = false;
             port = 587;
-            secure = true;
+            secure = false;
             username = "api";
             password._secret = config.age.secrets.immich-smtp-password.path;
           };
