@@ -267,6 +267,11 @@
         storageLabelClaim = "preferred_username";
         storageQuotaClaim = "immich_quota";
       };
+      storageTemplate = {
+        enabled = true;
+        hashVerificationEnabled = true;
+        template = "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}";
+      };
     };
   };
   services.nginx.virtualHosts."immich.vdw.life" = {
