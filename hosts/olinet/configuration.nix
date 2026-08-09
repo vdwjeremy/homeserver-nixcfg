@@ -242,6 +242,11 @@
   };
 
   # Immich
+  age.secrets.immich-oidc-secret = {
+    file = ../../secrets/immich-oidc-secret.age;
+    owner = config.services.immich.user;
+    group = config.services.immich.group;
+  };
   services.immich = {
     enable = true;
     port = 2283;
@@ -249,18 +254,18 @@
     settings = {
       server.externalDomain = "https://immich.vdw.life";
       newVersionCheck.enabled = true;
-      oauth= {
-        issuerUrl= "https://auth.vdw.life/issue";
-        endSessionEndpoint= "https://auth.vdw.life/logout";
-        autoLaunch= false;
-        autoRegister= true;
-        clientId= "id";
-        clientSecret= "secret";
-        enabled= false;
-        roleClaim= "immich_role";
-        scope= "openid email profile";
-        storageLabelClaim= "preferred_username";
-        storageQuotaClaim= "immich_quota";
+      oauth = {
+        enabled = true;
+        issuerUrl = "https://auth.vdw.life/.well-known/openid-configuration";
+        endSessionEndpoint = "https://auth.vdw.life/api/oidc/end-session";
+        autoLaunch = false;
+        autoRegister = true;
+        clientId = "a8258857-72d7-4efa-9fd2-47c78713bcc6";
+        clientSecret._secret = config.age.secrets.immich-oidc-secret.path;
+        scope = "openid email profile";
+        roleClaim = "immich_role";
+        storageLabelClaim = "preferred_username";
+        storageQuotaClaim = "immich_quota";
       };
     };
   };
