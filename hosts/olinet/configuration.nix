@@ -249,13 +249,12 @@
   };
   systemd.services."pocket-id-backup" = {
     script = ''
-      ${pkgs.pocket-id}/bin/pocket-id export --path /mnt/data/pocket-id-export.zip
+      cd /var/lib/pocket-id
+      ENCRYPTION_KEY_FILE=/run/agenix/pocket-id-key ${pkgs.pocket-id}/bin/pocket-id export --path /mnt/data/pocket-id-export.zip
     '';
     serviceConfig = {
       Type = "oneshot";
       User = config.services.pocket-id.user;
-      LoadCredential = "ENCRYPTION_KEY_FILE:/run/agenix/pocket-id-key";
-      ReadWritePaths = [ "/var/lib/pocket-id" ];
     };
   };
 
