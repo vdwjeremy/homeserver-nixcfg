@@ -130,19 +130,6 @@
     extensions = with pkgs.postgresql_18.pkgs; [ pgvector vectorchord ];
   };
 
-  # NFS
-  services.nfs.server = {
-    enable = true;
-    # fixed rpc.statd port; for firewall
-    lockdPort = 4001;
-    mountdPort = 4002;
-    statdPort = 4000;
-    extraNfsdConfig = '''';
-    exports = ''
-      /mnt/data/music    192.168.0.0/16(insecure,rw,no_subtree_check,all_squash,anonuid=60,anongid=60) 2a02:8428:1c70:a900::/56(insecure,rw,no_subtree_check,all_squash,anonuid=60,anongid=60)
-    '';
-  };
-
   # Web
   age.secrets.acme = {
     file = ../../secrets/acme.age;
@@ -419,6 +406,17 @@
         send_timeout         600s;
       '';
     };
+  };
+  services.nfs.server = {
+    enable = true;
+    # fixed rpc.statd port; for firewall
+    lockdPort = 4001;
+    mountdPort = 4002;
+    statdPort = 4000;
+    extraNfsdConfig = '''';
+    exports = ''
+      /mnt/data/music    192.168.0.0/16(insecure,rw,no_subtree_check,all_squash,anonuid=989,anongid=987) 2a02:8428:1c70:a900::/56(insecure,rw,no_subtree_check,all_squash,anonuid=989,anongid=987)
+    '';
   };
 
 }
