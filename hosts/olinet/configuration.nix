@@ -315,11 +315,17 @@
   };
 
   # Paperless NGX
+  age.secrets.paperless-env = {
+    file = ../../secrets/paperless-env.age;
+    owner = config.services.paperless.user;
+    group = config.services.paperless.group;
+  };
   services.paperless = {
     enable = true;
     consumptionDirIsPublic = true;
     database.createLocally = true;
     dataDir = "/mnt/data/paperless";
+    environmentFile = "${config.age.secrets.paperless-env.path}";
     settings = {
       PAPERLESS_DBENGINE = "postgresql";
       PAPERLESS_CONSUMER_IGNORE_PATTERN = [
@@ -340,6 +346,10 @@
       PAPERLESS_THREADS_PER_WORKER=1;
       PAPERLESS_CONVERT_MEMORY_LIMIT=128;
       PAPERLESS_CONSUMER_ENABLE_ASN_BARCODE = true;
+      PAPERLESS_APPS = "allauth.socialaccount.providers.openid_connect";
+      PAPERLESS_LOGOUT_REDIRECT_URL = "https://auth.vdw.life/api/oidc/end-session";
+      PAPERLESS_SOCIAL_AUTO_SIGNUP = true;
+      PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS = true;
     };
   };
   services.nginx.virtualHosts."paperless.vdw.life" = {

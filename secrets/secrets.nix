@@ -13,4 +13,5 @@ in
   "pocket-id-key.age".publicKeys = users ++ systems;
   "immich-oidc-secret.age".publicKeys = users ++ systems;
   "immich-smtp-password.age".publicKeys = users ++ systems;
+  "paperless-env.age".publicKeys = users ++ systems;
 }
