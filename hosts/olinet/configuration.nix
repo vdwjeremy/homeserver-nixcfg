@@ -318,7 +318,7 @@
   age.secrets.paperless-env = {
     file = ../../secrets/paperless-env.age;
     owner = config.services.paperless.user;
-    group = config.services.paperless.group;
+    group = config.services.paperless.user;
   };
   services.paperless = {
     enable = true;
