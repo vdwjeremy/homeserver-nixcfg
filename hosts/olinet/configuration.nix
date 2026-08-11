@@ -174,7 +174,8 @@
         dav_ext_methods PROPFIND OPTIONS LOCK UNLOCK;
         # Adjust as desired:
         dav_access user:rw group:rw all:r;
-        client_max_body_size 0;
+        client_max_body_size 50000M;
+        send_timeout         600s;
         create_full_put_path on;
         #client_body_temp_path /srv/client-temp;
         autoindex on;
