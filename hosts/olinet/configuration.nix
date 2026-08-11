@@ -250,7 +250,7 @@
   systemd.services."pocket-id-backup" = {
     script = ''
       cd /var/lib/pocket-id
-      ENCRYPTION_KEY_FILE=/run/agenix/pocket-id-key ${pkgs.pocket-id}/bin/pocket-id export --path /mnt/data/pocket-id-export.zip
+      ENCRYPTION_KEY_FILE=/run/agenix/pocket-id-key ${pkgs.pocket-id}/bin/pocket-id export --path /mnt/data/pocket-id-backup/pocket-id-export.zip
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -393,6 +393,30 @@
       extraConfig = ''
         deny all;
         return 404;
+      '';
+    };
+  };
+
+  # Navidrome
+  services.navidrome = {
+    enable = true;
+    settings.MusicFolder = "/mnt/data/music";
+  };
+  services.nginx.virtualHosts."music.vdw.life" = {
+    enableACME = true;
+    acmeRoot = null;
+    addSSL = true;
+    http2 = true;
+    http3 = true;
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:4533";
+      proxyWebsockets = true;
+      recommendedProxySettings = true;
+      extraConfig = ''
+        client_max_body_size 50000M;
+        proxy_read_timeout   600s;
+        proxy_send_timeout   600s;
+        send_timeout         600s;
       '';
     };
   };
