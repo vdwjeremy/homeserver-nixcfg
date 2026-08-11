@@ -254,6 +254,8 @@
     serviceConfig = {
       Type = "oneshot";
       User = config.services.pocket-id.user;
+      LoadCredential = "ENCRYPTION_KEY_FILE:/run/agenix/pocket-id-key";
+      ReadWritePaths = [ "/var/lib/pocket-id" ];
     };
   };
 
