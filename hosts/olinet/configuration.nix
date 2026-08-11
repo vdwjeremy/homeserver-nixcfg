@@ -249,13 +249,12 @@
   };
   systemd.services."pocket-id-backup" = {
     script = ''
-      ${pkgs.pocket-id}/bin/pocket-id --help
+      ${pkgs.pocket-id}/bin/pocket-id export --path /mnt/data/pocket-id-export.zip
     '';
     serviceConfig = {
       Type = "oneshot";
       User = config.services.pocket-id.user;
     };
-    wantedBy = [ "multi-user.target" ];
   };
 
   # Immich
@@ -368,7 +367,7 @@
       PAPERLESS_SOCIAL_AUTO_SIGNUP = true;
       PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS = true;
       PAPERLESS_DISABLE_REGULAR_LOGIN = true;
-      PAPERLESS_REDIRECT_LOGIN_TO_SSO = true;
+      PAPERLESS_REDIRECT_LOGIN_TO_SSO = false;
       PAPERLESS_TOKEN_THROTTLE_RATE = "5/min";
     };
   };
