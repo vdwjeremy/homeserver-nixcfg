@@ -240,6 +240,23 @@
         '';
     };
   };
+  systemd.timers."pocket-id-backup" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar="weekly";
+      Unit = "pocket-id-backup.service";
+    };
+  };
+  systemd.services."pocket-id-backup" = {
+    script = ''
+      ${pkgs.pocket-id}/bin/pocket-id --help
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = config.services.pocket-id.user;
+    };
+    wantedBy = [ "multi-user.target" ];
+  };
 
   # Immich
   age.secrets.immich-oidc-secret = {
@@ -340,16 +357,19 @@
         optimize = 3;
         continue_on_soft_render_error = true;
       };
-      PAPERLESS_OCR_MAX_IMAGE_PIXELS=80000000;
+      PAPERLESS_OCR_MAX_IMAGE_PIXELS = 80000000;
       PAPERLESS_URL = "https://paperless.vdw.life";
-      PAPERLESS_TASK_WORKERS=1;
-      PAPERLESS_THREADS_PER_WORKER=1;
-      PAPERLESS_CONVERT_MEMORY_LIMIT=128;
+      PAPERLESS_TASK_WORKERS = 1;
+      PAPERLESS_THREADS_PER_WORKER = 1;
+      PAPERLESS_CONVERT_MEMORY_LIMIT = 128;
       PAPERLESS_CONSUMER_ENABLE_ASN_BARCODE = true;
       PAPERLESS_APPS = "allauth.socialaccount.providers.openid_connect";
       PAPERLESS_LOGOUT_REDIRECT_URL = "https://auth.vdw.life/api/oidc/end-session";
       PAPERLESS_SOCIAL_AUTO_SIGNUP = true;
       PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS = true;
+      PAPERLESS_DISABLE_REGULAR_LOGIN = true;
+      PAPERLESS_REDIRECT_LOGIN_TO_SSO = true;
+      PAPERLESS_TOKEN_THROTTLE_RATE = "5/min";
     };
   };
   services.nginx.virtualHosts."paperless.vdw.life" = {
@@ -367,6 +387,12 @@
         proxy_read_timeout   600s;
         proxy_send_timeout   600s;
         send_timeout         600s;
+      '';
+    };
+    locations."/admin" = {
+      extraConfig = ''
+        deny all;
+        return 404;
       '';
     };
   };
