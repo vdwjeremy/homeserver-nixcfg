@@ -182,7 +182,10 @@
 
         allow all;
 
-        # create directory fails if trailing slash is missing
+        # create/delete directory fails if trailing slash is missing
+        if (-d $request_filename) {
+          rewrite ^(.*[^/])$ $1/ break;
+        }
         if ($request_method = MKCOL) {
           rewrite ^(.*[^/])$ $1/ break;
         }
