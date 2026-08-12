@@ -167,7 +167,7 @@
     root = "/mnt/data/webdav";
     locations."/" = {
       extraConfig = ''
-        auth_basic "Restricted WebDAV";
+        auth_basic "Authorized Users Only";
         auth_basic_user_file ${config.age.secrets.webdav-htpasswd.path};
 
         dav_methods PUT DELETE MKCOL COPY MOVE;
@@ -181,6 +181,11 @@
         autoindex on;
 
         allow all;
+
+        # create directory fails if trailing slash is missing
+        if ($request_method = MKCOL) {
+          rewrite ^(.*[^/])$ $1/ break;
+        }
         '';
     };
   };
