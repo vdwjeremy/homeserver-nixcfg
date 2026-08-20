@@ -436,6 +436,8 @@
   ];
 
   services.dovecot2 = {
+    enable = true;
+    enablePAM = false;
     settings = {
       # dovecot_config_version and dovecot_storage_version must be explicitly set
       # to retain compatibility with future updates.
@@ -452,6 +454,14 @@
       # store virtual mail under /mnt/data/mail/<DOMAIN>/<USER>/Maildir
       mail_driver = "maildir";
       mail_path = "~/";
+
+      "passdb static" = {
+        fields = {
+          nopassword = "yes";
+          proxy = "yes";
+          host = "127.0.0.1";
+        };
+      };
 
       "userdb static" = {
         fields = {
