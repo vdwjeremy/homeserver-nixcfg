@@ -429,4 +429,39 @@
     '';
   };
 
+  # Mail archive
+  # /mnt/data/mail needs to be created and owned by vmail
+  systemd.tmpfiles.rules = [
+    "d /mnt/data/mail 0700 vmail vmail -"
+  ];
+
+  services.dovecot2 = {
+    settings = {
+      # dovecot_config_version and dovecot_storage_version must be explicitly set
+      # to retain compatibility with future updates.
+      dovecot_config_version = "2.4.4";
+      dovecot_storage_version = "2.4.4";
+
+      # If config.services.dovecot2.createMailUser is true (which is the default),
+      # the user defined in mail_uid and mail_gid will be automatically created.
+      mail_uid = "vmail";
+      mail_gid = "vmail";
+
+      # implement virtual users
+      # https://doc.dovecot.org/2.4.4/howto/virtual/simple_install.html
+      # store virtual mail under /mnt/data/mail/<DOMAIN>/<USER>/Maildir
+      mail_driver = "maildir";
+      mail_path = "~/";
+
+      "userdb static" = {
+        fields = {
+          uid = "vmail";
+          gid = "vmail";
+          username_format = "%u";
+          home = "/mnt/data/mail/%d/%n";
+        };
+      };
+    };
+  };
+
 }
