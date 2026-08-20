@@ -444,6 +444,8 @@
       dovecot_config_version = "2.4.4";
       dovecot_storage_version = "2.4.4";
 
+      protocols = [ "imap" ];
+
       # If config.services.dovecot2.createMailUser is true (which is the default),
       # the user defined in mail_uid and mail_gid will be automatically created.
       mail_uid = "vmail";
