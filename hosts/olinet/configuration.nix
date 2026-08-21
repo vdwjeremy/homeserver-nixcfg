@@ -61,6 +61,7 @@
   environment.systemPackages = with pkgs; [
     htop
     git
+    inetutils
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -460,8 +461,8 @@
       "passdb static" = {
         fields = {
           nopassword = "yes";
-          proxy = "yes";
-          host = "127.0.0.1";
+          #proxy = "yes";
+          #host = "127.0.0.1";
         };
       };
 
