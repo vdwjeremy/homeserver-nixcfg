@@ -435,7 +435,6 @@
   systemd.tmpfiles.rules = [
     "d /mnt/data/mail 0700 vmail vmail -"
   ];
-
   services.dovecot2 = {
     enable = true;
     enablePAM = false;
@@ -456,15 +455,13 @@
       # https://doc.dovecot.org/2.4.4/howto/virtual/simple_install.html
       # store virtual mail under /mnt/data/mail/<DOMAIN>/<USER>/Maildir
       mail_driver = "maildir";
-      mail_path = "~/Mail";
+      mail_path = "~/";
 
       auth_default_domain = "vdw.life";
 
       "passdb static" = {
         fields = {
           nopassword = "yes";
-          #proxy = "yes";
-          #host = "127.0.0.1";
         };
       };
 
@@ -477,6 +474,10 @@
         };
       };
     };
+  };
+  services.roundcube = {
+    enable = true;
+    hostName = "mailarchive.vdw.life";
   };
 
 }
