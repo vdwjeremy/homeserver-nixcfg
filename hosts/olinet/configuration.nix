@@ -456,7 +456,9 @@
       # https://doc.dovecot.org/2.4.4/howto/virtual/simple_install.html
       # store virtual mail under /mnt/data/mail/<DOMAIN>/<USER>/Maildir
       mail_driver = "maildir";
-      mail_path = "~/";
+      mail_path = "~/Mail";
+
+      auth_default_domain = "vdw.life";
 
       "passdb static" = {
         fields = {
@@ -470,8 +472,8 @@
         fields = {
           uid = "vmail";
           gid = "vmail";
-          username_format = "%u";
-          home = "/mnt/data/mail/%d/%n";
+          username_format = "%{user}";
+          home = "/mnt/data/mail/%{user | domain}/%{user | username}";
         };
       };
     };
