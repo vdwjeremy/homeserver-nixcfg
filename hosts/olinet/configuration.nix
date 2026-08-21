@@ -478,6 +478,20 @@
   services.roundcube = {
     enable = true;
     hostName = "mailarchive.vdw.life";
+    extraConfig = ''
+      $config['imap_host'] = '127.0.0.1';
+      $config['default_host'] = 'localhost';
+      $config['default_port'] = 143;
+      $config['imap_auth_type'] = 'LOGIN';
+      $config['imap_delimiter'] = '/';
+      // Required if you're running PHP 5.6 or later
+      $config['imap_conn_options'] = array(
+          'ssl' => array(
+              'verify_peer'  => false,
+              'verify_peer_name' => false,
+          ),
+      );
+    '';
   };
 
 }
